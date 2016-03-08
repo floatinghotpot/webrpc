@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta http-equiv="pragma" content="no-cache" />
+
+  <!-- to avoid the warning of content security policy -->
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+
+<script>
+  // fix wp8 view port issue, see:
+  // https://github.com/floatinghotpot/cordova-admob-pro/issues/109
+  // https://coderwall.com/p/zk_2la/responsive-design-in-ie-10-on-windows-phone-8
+  // http://stackoverflow.com/questions/24007577/windows-phone-8-viewport-issue
+(function() {
+  if ("-ms-user-select" in document.documentElement.style && navigator.userAgent.match(/IEMobile\/10\.0/)) {
+    var msViewportStyle = document.createElement("style");
+    msViewportStyle.appendChild(
+      document.createTextNode("@-ms-viewport{width:auto!important}")
+    );
+    document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+  }
+})();
+</script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="webrpc.js"></script>
+  <title>Socket.IO RPC Demo</title>
+</head>
+<script>
+  var client = new WebRPCClient();
+
+  client.bind(io());
+
+  function send() {
+    var str = document.getElementById('str').value;
+    client.rpc('hello', str, function(err, ret){
+      console.log(err, ret);
+      document.getElementById('out').innerHTML += (ret + '<br/>');
+    });
+  }
+</script>
+<style>
+  div#out {
+    width: 400px;
+    height: 300px;
+    border: 1pt solid gray;
+  }
+  div#in {
+  }
+  input#str {
+    width: 300px;
+    padding: 5px;
+  }
+  button#send {
+    padding: 5px;
+  }
+</style>
+<body>
+  <div id="page">
+    <div id="out"></div>
+    <div id="in">
+      <input type="text" id="str" value="hello, the world!"/><button id="send" onclick="send()">Send</button>
+    </div>
+  </div>
+</body>
+</html>

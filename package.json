@@ -1,0 +1,33 @@
+{
+  "name": "webrpc.js",
+  "version": "0.9.7",
+  "description": "A reusable API server/client framework, running on socket.io",
+  "main": "./webrpc.js",
+  "scripts": {
+    "start": "node ./demo.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/floatinghotpot/webrpc.git"
+  },
+  "keywords": [
+    "webrpc",
+    "rpc",
+    "websocket"
+  ],
+  "author": {
+    "name": "Raymond Xie",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/floatinghotpot/webrpc/issues"
+  },
+  "homepage": "https://github.com/floatinghotpot/webrpc#README.md",
+  "dependencies": {
+    "express": "^4.13.4",
+    "socket.io": "^1.4.4",
+  },
+  "devDependencies": {
+  }
+}
