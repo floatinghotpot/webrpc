@@ -1,10 +1,9 @@
 {
   "name": "webrpc.js",
-  "version": "0.9.7",
+  "version": "0.9.9",
   "description": "A reusable API server/client framework, running on socket.io",
   "main": "./webrpc.js",
   "scripts": {
-    "start": "node ./demo.js"
   },
   "repository": {
     "type": "git",
@@ -25,8 +24,6 @@
   },
   "homepage": "https://github.com/floatinghotpot/webrpc#README.md",
   "dependencies": {
-    "express": "^4.13.4",
-    "socket.io": "^1.4.4"
   },
   "devDependencies": {
   }

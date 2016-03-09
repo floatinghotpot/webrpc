@@ -16,6 +16,7 @@ WebRPCServer.prototype = {
     this.io = null;
     this.rpcs = {};
     this.logTraffic = false;
+    this.loginRequired = false;
 
     this.isRunning = false;
     this.timer = 0;
@@ -27,6 +28,12 @@ WebRPCServer.prototype = {
 
   showTraffic: function(y) {
     this.logTraffic = y;
+    return this;
+  },
+
+  requireLogin: function(y) {
+    this.loginRequired = y;
+    return this;
   },
 
   // func(req, reply(err, ret));
@@ -36,6 +43,7 @@ WebRPCServer.prototype = {
       if(!fList) fList = this.rpcs[key] = [];
       fList.push(func);
     }
+    return this;
   },
 
   off: function(key, func) {
@@ -46,6 +54,7 @@ WebRPCServer.prototype = {
       }
       if(fList.length === 0) delete this.rpcs[key];
     }
+    return this;
   },
 
   bind: function(io) {
@@ -111,9 +120,33 @@ WebRPCServer.prototype = {
       args: args,
     } */
     webSock.on('rpc', function(req){
-      var callbacks = server.rpcs[req.f];
+      var f = req.f;
+
+      if(server.loginRequired) {
+        switch(f) {
+          case 'fastsignup':
+          case 'signup':
+          case 'login':
+            break;
+          default:
+            var _token = webSock._loginToken || { uid:'x', pin:'x' };
+            if(_token.pin !== req.pin) {
+              return webSock.emit('reply', {
+                seq: req.seq,
+                err: 403,
+                ret: 'Please login first',
+              });
+            }
+            break;
+        }
+      }
+
+      var callbacks = server.rpcs[f];
       if(callbacks && callbacks.length > 0) {
         var reply = function(err, ret) {
+          if((!err) && (f === 'login')) {
+            webSock._loginToken = ret.token || { uid:'x', pin:'x' };
+          }
           webSock.emit('reply', {
             seq: req.seq,
             err: err,
@@ -125,7 +158,7 @@ WebRPCServer.prototype = {
           if(typeof func === 'function') func(req.args, reply);
         }
       } else {
-        if(server.logTraffic) console.log('rpc unhandled: ', req.f);
+        if(server.logTraffic) console.log('rpc unhandled: ', f);
       }
     });
 

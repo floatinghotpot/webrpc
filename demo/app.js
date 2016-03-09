@@ -17,7 +17,7 @@ httpserver.listen(3000, function(){
 var io = socketio.listen(httpserver);
 
 // create RPC server and bind to io
-var rpcd = require('./webrpc.js').Server(io);
+var rpcd = require('../webrpc.js').Server(io);
 
 // add some API handler
 rpcd.on('hello', function(args, reply){
