@@ -1,6 +1,6 @@
 {
   "name": "webrpc.js",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "A reusable API server/client framework, running on socket.io",
   "main": "./webrpc.js",
   "scripts": {

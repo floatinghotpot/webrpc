@@ -1,6 +1,6 @@
 # WebRPC.js
 
-A reusable API server/client framework, running on socket.io
+A reusable javascript API server/client framework, running on socket.io
 
 ### Install
 
@@ -14,6 +14,8 @@ $ npm install webrpc.js --save
 
 #### Server:
 
+Setup express and socket.io:
+
 ```javascript
 #!/usr/bin/env node
 
@@ -24,23 +26,26 @@ var socketio = require('socket.io'),
     http = require('http');
 
 // create http server with express
-var app = express().use(express.static('./'));
-var httpserver = http.createServer(app);
-httpserver.listen(3000);
+var app = express().use(express.static('./www'));
+var httpd = http.createServer(app);
+httpd.listen(3000);
 
 // create socket io
-var io = socketio.listen(httpserver);
+var io = socketio.listen(httpd);
+```
 
-// create RPC server and bind to io
+Then create RPC server and bind to socket io:
+
+```javascript
 var rpcd = require('webrpc.js').Server(io);
 
-// add some API handler
+// define some API handler
 rpcd.on('hello', function(args, reply){
   console.log(args);
   if(args) {
     reply(0, "You just sent me: " + JSON.stringify(args));
   } else {
-    reply(404, "Please send something.");
+    reply(400, "Please send something.");
   }
 });
 ```
@@ -53,9 +58,13 @@ rpcd.on('hello', function(args, reply){
 ```
 
 ```javascript
+  // create RPC client, then bind it on web socket connection
   var client = new WebRPCClient();
   client.bind(io());
-  client.rpc('hello', { param1: "anything" }, function(err, ret){
+
+  // now call the API defined in server-side
+  var args = { param1: 'something', param2: ['anything else'] };
+  client.rpc('hello', args, function(err, ret){
     console.log(err, ret);
   });
 ```

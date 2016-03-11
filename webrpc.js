@@ -167,11 +167,12 @@ WebRPCServer.prototype = {
   },
 };
 
-function WebRPCClient() {
+function WebRPCClient(sock) {
   if(this && (this instanceof WebRPCClient)) {
     this.reset();
+    if(sock) this.bind(sock);
   } else {
-    return new WebRPCClient();
+    return new WebRPCClient(sock);
   }
 };
 
